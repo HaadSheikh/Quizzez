@@ -8,33 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 
-const Timer = ({ onTimeUp }) => {
-  const [timer, setTimer] = useState(300); // 5 minutes
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          onTimeUp();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [onTimeUp]);
-
-  const minutes = Math.floor(timer / 60);
-  const seconds = timer % 60;
-
-  return (
-    <Text style={styles.timer}>
-      Time: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-    </Text>
-  );
-};
-
 const QuizApp = () => {
   const [quizData, setQuizData] = useState(null);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -44,7 +17,30 @@ const QuizApp = () => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [timer, setTimer] = useState(300); // 5 minutes
 
+  // Timer logic
+  useEffect(() => {
+    if (quizFinished) return;
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setQuizFinished(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [quizFinished]);
+
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+
+  // Fetch quiz data
   useEffect(() => {
     const getData = async () => {
       try {
@@ -91,6 +87,7 @@ const QuizApp = () => {
     setScore(0);
     setQuizFinished(false);
     setSelectedAnswer("");
+    setTimer(300);
     shuffleAnswers(quizData[0]);
   };
 
@@ -98,12 +95,17 @@ const QuizApp = () => {
     return (
       <ActivityIndicator size="large" color="#facc15" style={styles.loading} />
     );
+
   if (error)
     return <Text style={styles.error}>Error occurred while loading quiz.</Text>;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {!quizFinished && <Timer onTimeUp={() => setQuizFinished(true)} />}
+      {!quizFinished && (
+        <Text style={styles.timer}>
+          Time: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        </Text>
+      )}
 
       {quizFinished ? (
         <View style={styles.result}>
