@@ -11,19 +11,20 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
+import image from '../assets/images/3290981.webp'
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1e293b" />
 
-      <Animatable.Image
-        animation="bounceIn"
-        duration={1500}
-        source={require("../assets/images/quiz img.avif")}
-        style={styles.image}
-        resizeMode="contain"
-      />
+     <Image
+  animation="bounceIn"
+  duration={1500}
+  source={image}
+  style={styles.image}
+  resizeMode="contain"
+/>
 
       <Animatable.Text animation="fadeInDown" delay={300} style={styles.title}>
         Welcome to the Quiz App
@@ -36,7 +37,7 @@ export default function HomeScreen() {
       <Animatable.View animation="fadeInUp" delay={700} style={styles.instructions}>
         <Text style={styles.instructionTitle}>📋 Quiz Instructions:</Text>
         <Text style={styles.instructionText}>• You have 5 minutes to complete the quiz.</Text>
-        <Text style={styles.instructionText}>• Total: 15 questions.</Text>
+        <Text style={styles.instructionText}>• Total: 10 questions.</Text>
         <Text style={styles.instructionText}>• You can select only once per question.</Text>
         <Text style={styles.instructionText}>• No going back after answering.</Text>
       </Animatable.View>
